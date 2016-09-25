@@ -19,6 +19,7 @@ public class Startup
         var host = new WebHostBuilder()
                     .UseKestrel()
                     .UseConfiguration(config)
+		     .UseUrls("http://*5000")
                     .UseStartup<Startup>()
                     .Build();
         host.Run();
