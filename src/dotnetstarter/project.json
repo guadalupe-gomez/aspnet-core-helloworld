@@ -1,28 +1,37 @@
 {
     "buildOptions": {
         "copyToOutput": {
-            "include": [ "wwwroot" ]
+            "include": [
+                "wwwroot"
+            ]
         },
         "debugType": "portable",
         "emitEntryPoint": true,
         "preserveCompilationContext": true
     },
-
     "publishOptions": {
-        "include": [ "wwwroot" ],
-        "exclude": [ "**.user", "**.vspscc" ]
+        "include": [
+            "wwwroot"
+        ],
+        "exclude": [
+            "**.user",
+            "**.vspscc"
+        ]
     },
-
     "dependencies": {
         "Microsoft.AspNetCore.Server.Kestrel": "1.0.1",
         "Microsoft.AspNetCore.StaticFiles": "1.0.0",
         "Microsoft.Extensions.Configuration.CommandLine": "1.0.0",
+        "Microsoft.Extensions.Logging": "1.0.0",
+        "Microsoft.Extensions.Logging.Console": "1.0.0",
+        "Microsoft.Extensions.Logging.Debug": "1.0.0",
+        "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0",
+        "Microsoft.Extensions.Configuration.Json": "1.0.0",
         "Microsoft.NETCore.App": {
             "type": "platform",
             "version": "1.0.1"
         }
     },
-
     "frameworks": {
         "netcoreapp1.0": {
             "imports": [
@@ -30,8 +39,6 @@
             ]
         }
     },
-
-    "scripts": { },
-
+    "scripts": {},
     "version": "1.0.1"
 }

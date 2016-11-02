@@ -1,25 +1,38 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.IO;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 public class Startup
 {
-	public void Configure(IApplicationBuilder app)
-	{
-		app.UseDefaultFiles();
-		app.UseStaticFiles();
+
+    public Startup(IHostingEnvironment env)
+    {
+        var builder = new ConfigurationBuilder()
+            .SetBasePath(env.ContentRootPath)
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
+
+        builder.AddEnvironmentVariables();
+        Configuration = builder.Build();
+    }
+
+    public IConfigurationRoot Configuration { get; set; }
+
+    public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
+    {
+        loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+        app.UseDefaultFiles();
+        app.UseStaticFiles();
     }
 
     public static void Main(string[] args)
     {
-        var config = new ConfigurationBuilder()
-            .AddCommandLine(args)
-            .Build();
-
         var host = new WebHostBuilder()
                     .UseKestrel()
-                    .UseConfiguration(config)
-		    .UseUrls("http://*:5000")
+                    .UseUrls("http://*:5000")
+                    .UseContentRoot(Directory.GetCurrentDirectory())
                     .UseStartup<Startup>()
                     .Build();
         host.Run();
