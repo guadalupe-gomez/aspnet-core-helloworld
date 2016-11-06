@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -18,11 +19,12 @@ public class Startup
         Configuration = builder.Build();
     }
 
-    public IConfigurationRoot Configuration { get; set; }
+    public static IConfigurationRoot Configuration { get; set; }
 
     public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
     {
         loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+
         app.UseDefaultFiles();
         app.UseStaticFiles();
     }
@@ -30,11 +32,15 @@ public class Startup
     public static void Main(string[] args)
     {
         var host = new WebHostBuilder()
-                    .UseKestrel()
-                    .UseUrls("http://*:80", "https://*:443")
-                    .UseContentRoot(Directory.GetCurrentDirectory())
-                    .UseStartup<Startup>()
-                    .Build();
+            .UseKestrel((o) => 
+            {
+                o.UseHttps(new X509Certificate2(@"cert.pfx", Configuration["certPassword"]));
+            })
+            .UseUrls("https://*:443")
+            .UseContentRoot(Directory.GetCurrentDirectory())
+            .UseStartup<Startup>()
+            .Build();
+
         host.Run();
     }
 }
